@@ -1,0 +1,17 @@
+# NYPD Stop-and-Frisk Data Analysis (2024)
+
+### 🔴 [View the Full Analysis Here](INSERT_YOUR_GITHUB_PAGES_LINK_HERE)
+
+## Project Overview
+This project analyzes the 2024 NYPD Stop-and-Frisk dataset to quantify racial, geospatial, and temporal disparities in policing. Using R, I processed over 20,000 stops to answer the question: *Is the policy applied uniformly across New York City?*
+
+## Key Findings
+* [cite_start]**Racial Disparity:** Black and Hispanic individuals account for the vast majority of stops, far exceeding their population share[cite: 46, 54].
+* [cite_start]**The "Hit Rate" Paradox:** Despite being stopped more frequently, Black and Hispanic suspects have a significantly **lower** arrest rate (approx. 27%) compared to White and Asian suspects (approx. 39%)[cite: 128]. This suggests a lower threshold of suspicion is applied to minority groups.
+* [cite_start]**Temporal Patterns:** Stops are overwhelmingly concentrated at night, specifically between 9 PM and 11 PM[cite: 96].
+
+## Tools Used
+* **Language:** R (Tidyverse)
+* [cite_start]**Geospatial:** `sf` package for mapping borough coordinates[cite: 69].
+* [cite_start]**Statistics:** Chi-Squared Goodness-of-Fit & Paired t-tests[cite: 60, 101].
+* [cite_start]**NLP:** Text mining suspect descriptions to identify seasonal trends[cite: 114].

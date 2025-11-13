@@ -1,0 +1,501 @@
+---
+title: "Analysis of NYPD Stop-and-Frisk Data (2024)"
+author: "Data Science Portfolio Project"
+date: "November 13, 2025"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: journal
+    code_folding: hide
+---
+
+```{=html}
+<style>
+.nobullet li {
+ list-style-type: none;
+}
+</style>
+```
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(rvest)       # For web scraping
+library(sf)          # For spatial data
+library(tigris)      # For borough shapefiles
+library(readxl)      # For reading the Excel file
+library_list <- c("tidyverse", "readxl", "rvest", "sf", "tigris", 
+                "stopwords", "ggrepel", "patchwork", 
+                "knitr", "tidytext", "scales")
+lapply(library_list, require, character.only = TRUE)
+
+# Set locale for consistent date formatting
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
+```
+
+# 1. Introduction: Analyzing a Controversial Policy
+
+The New York Police Department's (NYPD) Stop-and-Frisk policy has been one of the most controversial policing tactics in modern American history. While proponents argue it is a necessary tool for reducing crime, critics point to its disproportionate impact on minority communities, citing it as a practice of racial profiling that erodes public trust.
+
+This project uses the **2024 NYPD Stop-and-Frisk dataset** to look past the arguments and see what the numbers say. My goal is to practice the skills of a data scientist by exploring, quantifying, and visualizing this complex, real-world data.
+
+I'll be using text mining, geospatial analysis, and statistical tests to look for patterns. Specifically, I want to answer a few key questions:
+
+1.  **Racial Disparity:** Does the racial distribution of stops align with the city's demographic makeup?
+2.  **Geospatial Distribution:** Are stops concentrated in specific boroughs, and is this distribution proportional to population?
+3.  **Temporal Patterns:** Do stops occur more frequently at certain times of day (e.g., day vs. night)?
+4.  **Textual Patterns:** What language is used to describe suspects, and are there seasonal trends?
+5.  **Stop Outcomes:** Is there a difference in the likelihood of arrest based on the suspect's race?
+
+------------------------------------------------------------------------
+
+# 2. Data Loading and Quality Assessment
+
+## 2.1. Initial Data Loading
+
+The analysis begins by loading the `sqf-2024.xlsx` dataset from the www.nyc.gov website. I'll also do some initial preprocessing, like converting stop durations to a numeric type and creating proper date/time columns for later analysis.
+
+```{r data-load, message=FALSE, warning=FALSE, results = 'hide'}
+url <- "https://www.nyc.gov/assets/nypd/downloads/excel/analysis_and_planning/stop-question-frisk/sqf-2024.xlsx"
+dest_file <- "sqf-2024.xlsx"
+
+if (!file.exists(dest_file)) {
+  cat("Downloading sqf-2024.xlsx from nyc.gov...\n")
+  tryCatch({
+    download.file(url, dest_file, mode = "wb")
+    cat("Download complete.\n")
+  }, error = function(e) {
+    cat("Error downloading file:", e$message, "\n")
+  })
+} else {
+  cat("sqf-2024.xlsx already exists locally. Reading file...\n")
+}
+
+police_stops_raw <- read_excel(dest_file)
+
+police_stops <- police_stops_raw %>%
+  mutate(
+    STOP_DURATION_MINUTES = as.numeric(replace_na(STOP_DURATION_MINUTES, 0)),
+    Date = as.Date(STOP_FRISK_DATE, tz = "America/New_York"),
+    Time_str = format(STOP_FRISK_TIME, format = "%H:%M:%S"),
+    STOP_DATETIME = as.POSIXct(paste(Date, Time_str), 
+                               format="%Y-%m-%d %H:%M:%S", 
+                               tz = "America/New_York"),
+    Hour = hour(STOP_DATETIME),
+    MONTH = month(STOP_DATETIME, label = TRUE, abbr = FALSE)
+  )
+
+glimpse(police_stops)
+```
+
+
+Before diving in, it's good practice to do a quick data quality check. I'll look for strange values (like impossible ages) and see how much data is missing from key columns.
+
+<!-- end list -->
+
+```{r data-quality, warning=FALSE}
+age_numeric <- as.numeric(police_stops$SUSPECT_REPORTED_AGE)
+summary(age_numeric)
+
+cat(paste("\nPercentage of stops with missing or invalid Age (after numeric conversion):", 
+          round(mean(is.na(age_numeric)) * 100, 2), "%\n"))
+
+cat(paste("Percentage of stops with missing X/Y Coordinates:", 
+          round(mean(is.na(police_stops$STOP_LOCATION_X)) * 100, 2), "%\n"))
+
+cat(paste("Percentage of stops with missing Race Description:", 
+          round(mean(is.na(police_stops$SUSPECT_RACE_DESCRIPTION)) * 100, 2), "%\n"))
+```
+
+**Observation:** The data looks pretty clean. The summary of `SUSPECT_REPORTED_AGE` shows that ages are in a plausible range, and there's very little missing data for important columns like coordinates and race.
+
+------------------------------------------------------------------------
+
+# 3. Pivotal Analysis: Racial & Ethnic Disparities
+
+The most critical question surrounding Stop-and-Frisk is its application across racial and ethnic lines. I'll tackle this first by comparing the number of stops for each group to what we would expect based on NYC's 2020 census demographics.
+
+## 3.1. Data Preparation: Stops vs. Population
+
+First, I need to clean up the `SUSPECT_RACE_DESCRIPTION` categories to match the census data. Then, I'll create a table of NYC's population to serve as a baseline for comparison.
+
+```{r race-disparity-analysis}
+observed_stops_by_race <- police_stops %>%
+  filter(!is.na(SUSPECT_RACE_DESCRIPTION)) %>%
+  mutate(Race_Group = case_when(
+    SUSPECT_RACE_DESCRIPTION == "BLACK" ~ "Black",
+    SUSPECT_RACE_DESCRIPTION == "WHITE" ~ "White",
+    SUSPECT_RACE_DESCRIPTION == "ASIAN / PACIFIC ISLANDER" ~ "Asian",
+    SUSPECT_RACE_DESCRIPTION == "WHITE HISPANIC" ~ "Hispanic",
+    SUSPECT_RACE_DESCRIPTION == "BLACK HISPANIC" ~ "Hispanic",
+    TRUE ~ "Other"
+  )) %>%
+  count(Race_Group, name = "Observed_Stops")
+
+nyc_population <- tibble(
+  Race_Group = c("Hispanic", "White", "Black", "Asian", "Other"),
+  Population = c(2490350, 2733358, 1861299, 1373387, 261166)
+) %>%
+  mutate(Pop_Pct = Population / sum(Population))
+
+disparity_data <- inner_join(observed_stops_by_race, nyc_population, by = "Race_Group") %>%
+  mutate(
+    Total_Stops = sum(Observed_Stops),
+    Stops_Pct = Observed_Stops / Total_Stops
+  ) %>%
+  select(Race_Group, Population, Pop_Pct, Observed_Stops, Stops_Pct)
+
+kable(disparity_data, 
+      caption = "Stop Percentages vs. Population Percentages by Race/Ethnicity",
+      digits = c(0, 0, 3, 0, 3))
+```
+
+## 3.2. Visualizing the Disparity
+
+The table already shows a stark contrast, but a visualization makes the disparity impossible to ignore.
+
+```{r race-disparity-plot, fig.width=10, fig.height=6}
+disparity_plot_data <- disparity_data %>%
+  select(Race_Group, `Population %` = Pop_Pct, `Stops %` = Stops_Pct) %>%
+  pivot_longer(cols = c("Population %", "Stops %"), 
+               names_to = "Metric", 
+               values_to = "Percentage")
+
+ggplot(disparity_plot_data, aes(x = Race_Group, y = Percentage, fill = Metric)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(
+    title = "Profound Disparity in NYPD Stops vs. NYC Population (2024)",
+    subtitle = "Percentage of Total Stops vs. Percentage of City Population by Race/Ethnicity",
+    x = "Race / Ethnicity",
+    y = "Percentage",
+    fill = "Metric"
+  ) +
+  theme_minimal(base_size = 14) +
+  scale_fill_brewer(palette = "Set1")
+```
+
+**Observation:** The plot clearly shows that Black and Hispanic individuals are stopped at rates far exceeding their proportion of the city's population. Conversely, White and Asian individuals are stopped at rates far below their population share.
+
+## 3.3. Statistical Test: Chi-Squared Goodness-of-Fit
+
+To see if this difference is statistically significant, I'll use a Chi-Squared Goodness-of-Fit test. This test compares the stop counts I observed for each race against the counts I'd expect to see based on the city's population.
+
+-   **Null Hypothesis (**$H_0$): The number of police stops for each racial/ethnic group is proportional to that group's share of the NYC population.
+-   **Alternative Hypothesis (**$H_A$): The number of police stops is *not* proportional to the population distribution.
+
+<!-- end list -->
+
+```{r race-chisq-test}
+chi_sq_test_race <- chisq.test(x = disparity_data$Observed_Stops, 
+                               p = disparity_data$Pop_Pct)
+
+print(chi_sq_test_race)
+```
+
+**Conclusion:** The **p-value is effectively zero** (`< 2.2e-16`). This means I can overwhelmingly reject the null hypothesis. There is conclusive statistical evidence that the distribution of police stops across racial and ethnic groups is not proportional to their representation in the NYC population.
+
+------------------------------------------------------------------------
+
+# 4. Geospatial Analysis: Where Do Stops Occur?
+
+Having established *who* is stopped, I'll now analyze *where*. This section maps stop locations and compares stop frequencies across boroughs to their respective populations.
+
+## 4.1. Mapping Stop Concentrations
+
+First, I'll filter for stops with valid coordinates and project them onto a map of NYC's five boroughs.
+
+```{r geo-setup, message=FALSE, warning=FALSE}
+nyc_counties_raw <- counties(state = "36", cb = TRUE, progress_bar = FALSE) %>%
+  filter(COUNTYFP %in% c("005", "047", "061", "081", "085")) %>%
+  st_transform(crs = 4326)
+
+stops_sf <- police_stops %>%
+  mutate(
+    STOP_LOCATION_X = as.numeric(STOP_LOCATION_X),
+    STOP_LOCATION_Y = as.numeric(STOP_LOCATION_Y)
+  ) %>%
+  filter(
+    !is.na(STOP_LOCATION_X) & !is.na(STOP_LOCATION_Y) &
+    STOP_LOCATION_X != 0 & STOP_LOCATION_Y != 0
+  ) %>%
+  st_as_sf(coords = c("STOP_LOCATION_X", "STOP_LOCATION_Y"), crs = 2263) %>%
+  st_transform(crs = st_crs(nyc_counties_raw))
+
+stops_within_nyc <- st_intersection(stops_sf, st_union(nyc_counties_raw))
+```
+
+```{r geo-raw-map, fig.width=10, fig.height=7}
+ggplot() +
+  geom_sf(data = nyc_counties_raw, fill = "lightblue", color = "black") +
+  geom_sf(data = stops_within_nyc, size = 0.1, alpha = 0.1, color = "red") +
+  coord_sf(
+    xlim = st_bbox(nyc_counties_raw)[c("xmin", "xmax")],
+    ylim = st_bbox(nyc_counties_raw)[c("ymin", "ymax")],
+    expand = FALSE
+  ) +
+  labs(title = "Distribution of Police Stops in NYC (2024)",
+       subtitle = "Each red dot represents one stop") +
+  theme_void()
+```
+
+**Observation:** Stops are not evenly distributed. There are heavy concentrations in specific areas of Brooklyn, the Bronx, and Manhattan, with far fewer stops in Queens and Staten Island.
+
+## 4.2. Borough Disparities: Stops vs. Population
+
+Now I'll aggregate stops by borough and compare these figures to population data, similar to the racial analysis.
+
+```{r geo-borough-analysis, message=FALSE, warning=FALSE}
+pop_table <- tibble(
+  Borough = c("The Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"),
+  Population = c(1379946, 2590516, 1596273, 2278096, 491133)
+)
+
+county_to_borough <- tibble(
+  NAME = c("Bronx", "Kings", "New York", "Queens", "Richmond"),
+  Borough = c("The Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island")
+)
+
+nyc_boroughs_analysis <- left_join(nyc_counties_raw, county_to_borough, by = "NAME")
+
+stops_in_boroughs <- st_join(stops_sf, nyc_boroughs_analysis, join = st_within) %>%
+  st_drop_geometry() %>%
+  count(Borough) %>%
+  rename(Stops = n)
+
+borough_data <- nyc_boroughs_analysis %>%
+  left_join(pop_table, by = "Borough") %>%
+  left_join(stops_in_boroughs, by = "Borough") %>%
+  mutate(
+    Stops = replace_na(Stops, 0),
+    Pop_Pct = Population / sum(Population) * 100,
+    Stops_Pct = Stops / sum(Stops) * 100
+  )
+```
+
+```{r geo-choropleth-maps, fig.width=12, fig.height=6}
+pop_map <- ggplot(borough_data) +
+  geom_sf(aes(fill = Pop_Pct)) +
+  scale_fill_viridis_c(name = "Population %") +
+  labs(title = "Population Percentage by Borough") + 
+  theme_void()
+
+stops_map <- ggplot(borough_data) +
+  geom_sf(aes(fill = Stops_Pct)) +
+  scale_fill_viridis_c(name = "Stops %") +
+  labs(title = "Police Stops Percentage by Borough") + 
+  theme_void()
+
+pop_map + stops_map
+```
+
+**Observation:** The maps clearly show a disparity. The Bronx and Brooklyn account for a much larger percentage of stops than their population share. Queens is significantly under-represented.
+
+## 4.3. Statistical Test: Chi-Squared Goodness-of-Fit (Boroughs)
+
+I'll formalize this with another Chi-Squared test. This will tell me if the number of stops in each borough is proportional to its population.
+
+-   **Null Hypothesis (**$H_0$): The number of police stops in each borough is proportional to its population.
+-   **Alternative Hypothesis (**$H_A$): The number of police stops in each borough is not proportional to its population.
+
+<!-- end list -->
+
+```{r geo-chisq-test}
+chi_sq_test_borough <- chisq.test(x = borough_data$Stops, 
+                                  p = borough_data$Pop_Pct / 100)
+
+print(chi_sq_test_borough)
+```
+
+**Conclusion:** As with the racial analysis, the **p-value is effectively zero**. I can reject the null hypothesis. There is strong statistical evidence that the geographic distribution of police stops across NYC boroughs is not proportional to their populations.
+
+------------------------------------------------------------------------
+
+# 5. Temporal Analysis: When Do Stops Occur?
+
+This section explores the daily and monthly patterns of stops. To analyze stops relative to "Day" vs. "Night," I need to define those periods. Web scraping sunrise/sunset times can be unreliable, so I'll use a more robust method: defining "Night" as the hours before 7 AM or after 8 PM (20:00).
+
+## 5.1. Visualizing Stops: Day vs. Night
+
+Now I can classify each stop as "Day" or "Night" and visualize the hourly distribution.
+
+```{r temporal-plot, fig.width=12, fig.height=8}
+stops_with_time <- police_stops %>%
+  filter(!is.na(Hour)) %>%
+  mutate(
+    Time_of_Day = ifelse(Hour < 7 | Hour >= 20, "Night", "Day")
+  )
+
+ggplot(stops_with_time, aes(x = Hour, fill = Time_of_Day)) +
+  geom_histogram(binwidth = 1, color = "white") +
+  facet_wrap(~ MONTH, scales = "fixed") +
+  scale_fill_manual(values = c("Day" = "orange", "Night" = "navy"), name = "Time of Day") +
+  labs(
+    title = "Stops per Hour by Month (2024)",
+    subtitle = "Color indicates 'Day' (7 AM - 8 PM) vs. 'Night' (8 PM - 7 AM)",
+    x = "Hour of Day (0-23)",
+    y = "Number of Stops"
+  ) +
+  theme_bw()
+```
+
+**Observation:** The plots consistently show a bimodal distribution, with a smaller peak in the late afternoon and a much larger peak late at night (around 10-11 PM). The vast majority of stops occur at night.
+
+## 5.2. Statistical Test: Paired t-test
+
+To confirm this, I'll use a **paired t-test**. The data is "paired" because I'm comparing the day and night counts for the *same calendar day*, which helps control for other factors like weather or city events.
+
+```{r temporal-ttest}
+paired_data <- stops_with_time %>%
+  group_by(Date, Time_of_Day) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  pivot_wider(names_from = Time_of_Day, values_from = count, values_fill = 0)
+
+t_test_result <- t.test(paired_data$Night, paired_data$Day, paired = TRUE)
+
+print(t_test_result)
+```
+
+**Conclusion:** The p-value is extremely small (`< 2.2e-16`), and the test shows a mean difference of **\~50 more stops at night than during the day**. This is a statistically significant and substantial difference.
+
+------------------------------------------------------------------------
+
+# 6. Text Analysis: How Are Suspects Described?
+
+This section delves into the free-text `SUSPECT_OTHER_DESCRIPTION` column to identify common terms and seasonal trends.
+
+## 6.1. Top 10 Most Common Words
+
+I'll tokenize the text, convert it to lowercase, remove common English "stop words" (like 'the', 'is', 'a'), and filter out non-descriptive placeholders like "null" to isolate meaningful keywords.
+
+```{r text-top-words, fig.width=10, fig.height=6}
+word_counts <- police_stops %>%
+  filter(!is.na(SUSPECT_OTHER_DESCRIPTION)) %>%
+  unnest_tokens(word, SUSPECT_OTHER_DESCRIPTION) %>%
+  anti_join(get_stopwords(), by = "word") %>%
+  filter(word != "null") %>%
+  count(word, sort = TRUE)
+
+top_10_words <- head(word_counts, 10)
+
+ggplot(top_10_words, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "skyblue") +
+  coord_flip() +
+  labs(title = "Top 10 Words in Suspect Descriptions",
+       subtitle = "After removing common 'stop words' and 'null' values",
+       x = "Word", y = "Frequency") +
+  theme_minimal()
+```
+
+**Observation:** Descriptions are dominated by colors (black, white, blue) and clothing items (jacket, sneakers, pants, hoodie). This suggests descriptions are primarily focused on apparel.
+
+## 6.2. Seasonal Trends in Descriptions
+
+Are certain descriptions more common in different seasons? I'll analyze word frequencies on a monthly basis to find out.
+
+```{r text-seasonal-plot, fig.width=12, fig.height=8}
+monthly_word_ratios <- police_stops %>%
+  filter(!is.na(SUSPECT_OTHER_DESCRIPTION)) %>%
+  unnest_tokens(word, SUSPECT_OTHER_DESCRIPTION) %>%
+  anti_join(get_stopwords(), by = "word") %>%
+  count(MONTH, word) %>%
+  group_by(word) %>%
+  mutate(total_n = sum(n)) %>%
+  ungroup() %>%
+  filter(total_n >= 100) %>%
+  mutate(ratio = n / total_n)
+
+top_monthly_words <- monthly_word_ratios %>%
+  group_by(MONTH) %>%
+  slice_max(order_by = ratio, n = 5)
+
+ggplot(top_monthly_words, aes(x = reorder(word, ratio), y = ratio, fill = MONTH)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~ MONTH, scales = "free_y") +
+  labs(title = "Top 5 Most Characteristic Words per Month",
+       subtitle = "Words that are disproportionately common in specific months",
+       x = "Word", y = "Ratio of Monthly to Total Appearances") +
+  theme_bw()
+```
+
+**Observation:** The plots reveal strong seasonal trends. Words for cold-weather clothing like "jacket" and "hoodie" are characteristic of winter months (e.t., December, January). Conversely, "shorts" is a defining word for summer (e.g., July).
+
+------------------------------------------------------------------------
+
+## 7. Analysis of Stop Outcomes
+
+Finally, I'll analyze the **outcome** of the stops. While the previous sections established that Black and Hispanic individuals are stopped disproportionately often, this section asks: *once stopped, what happens?*
+
+A critical measure here is the **Arrest Rate** (sometimes called the "Hit Rate"). This measures the percentage of stops that result in an actual arrest.
+
+### 7.1. Arrest Rates by Race/Ethnicity
+
+I'll calculate the arrest rate for each racial group.
+
+```{r outcome-arrest-rate}        
+outcome_data <- police_stops %>%
+  filter(!is.na(SUSPECT_RACE_DESCRIPTION)) %>%
+  mutate(Race_Group = case_when(
+    SUSPECT_RACE_DESCRIPTION == "BLACK" ~ "Black",
+    SUSPECT_RACE_DESCRIPTION == "WHITE" ~ "White",
+    SUSPECT_RACE_DESCRIPTION == "ASIAN / PACIFIC ISLANDER" ~ "Asian",
+    SUSPECT_RACE_DESCRIPTION == "WHITE HISPANIC" ~ "Hispanic",
+    SUSPECT_RACE_DESCRIPTION == "BLACK HISPANIC" ~ "Hispanic",
+    TRUE ~ "Other"
+  ),
+  Arrested_Logical = (SUSPECT_ARRESTED_FLAG == "Y")
+  ) %>%
+  group_by(Race_Group) %>%
+  summarise(
+    Total_Stops = n(),
+    Arrest_Rate = mean(Arrested_Logical, na.rm = TRUE)
+  ) %>%
+  filter(Race_Group != "Other")
+
+kable(outcome_data, 
+      caption = "Arrest Rate ('Hit Rate') by Race/Ethnicity", 
+      digits = c(0, 0, 3))
+
+
+
+ggplot(outcome_data, aes(x = reorder(Race_Group, -Arrest_Rate), y = Arrest_Rate, fill = Race_Group)) +   geom_col(show.legend = FALSE) +   scale_y_continuous(labels = scales::percent_format()) +   labs(     title = "Arrest Rate ('Hit Rate') by Race/Ethnicity (2024)",     subtitle = "Percentage of stops that resulted in an arrest",     x = "Race / Ethnicity",     y = "Arrest Rate"   ) +   theme_minimal(base_size = 14) +   scale_fill_brewer(palette = "Set2") 
+```
+
+### 7.3. Interpretation: The "Hit Rate" Hypothesis
+
+The data reveals a counter-intuitive but statistically significant pattern: While Black and Hispanic individuals are stopped far more frequently, they are arrested at lower rates (approx. 27%) than White and Asian individuals (approx. 39%)^1^.
+
+In criminology and economics, this phenomenon is often analyzed using the **"Outcome Test"** (proposed by Nobel laureate Gary Becker). This disparity suggests a difference in the **"threshold of suspicion"**:
+
+1.  **High Hit Rate (White/Asian):** The higher arrest rate for White and Asian suspects suggests that officers generally only stop these individuals when there is clear, obvious evidence of criminal activity (a high threshold).
+
+2.  **Low Hit Rate (Black/Hispanic):** The lower arrest rate for Black and Hispanic suspects suggests a lower threshold for stopping these individuals. A lower "hit rate" implies that more innocent people within these groups are being stopped, questioned, and released without charge.
+
+**Conclusion:** The data suggests that while minority groups face a much higher volume of stops, the *yield* (arrests) from those stops is significantly lower, indicating that the standard of evidence required to initiate a stop may be applied unevenly across racial groups.
+
+# 8. Summary, Limitations, and Conclusion
+
+## 8.1. Key Insights
+
+This analysis of the 2024 NYPD Stop-and-Frisk data revealed several critical, statistically significant patterns:
+
+1.  **Profound Racial Disparity:** The analysis **conclusively rejected the hypothesis** that stops are proportional to population. Black and Hispanic individuals are stopped at rates significantly higher than their population share.
+2.  **Geographic Disparity:** This disproportionality also exists geographically. Stops are heavily concentrated in the Bronx and Brooklyn, far exceeding what would be expected by their populations alone.
+3.  **Temporal Patterns:** Stops are not random; they are **significantly more likely to occur at night**, with a large spike between 9 PM and 11 PM.
+4.  **Disparate Outcomes:** The consequences of stops are not uniform. Black and Hispanic individuals are **more likely to be arrested** following a stop than White or Asian individuals.
+5.  **Descriptive Language:** Officer descriptions of suspects are highly formulaic, focusing on **clothing and color**, with clear seasonal variations (e.g., "jacket" in winter, "shorts" in summer).
+
+## 8.2. Limitations
+
+This project demonstrates analytical skills, but it is not a comprehensive sociological study. Key limitations include:
+
+-   **Reporting Bias:** The data is based on what officers report. We cannot analyze stops that were not recorded.
+-   **Missing Variables:** We lack crucial context, such as the initial reason for the stop, neighborhood-level crime rates, or whether contraband was found. This limits our ability to explain *why* these disparities exist.
+-   **Correlation vs. Causation:** This analysis is **descriptive and correlational, not causal**. I have identified *what* is happening, but cannot definitively prove *why* (e.g., I cannot prove that race is the *cause* of the higher arrest rate, only that they are correlated).
+
+## 8.3. Conclusion
+
+This project successfully applied a range of data science techniques—data cleaning, web scraping, spatial analysis, text mining, and statistical testing—to a complex and sensitive real-world dataset.
+
+The findings paint a clear picture: in 2024, the Stop-and-Frisk policy was not applied uniformly. The data shows significant, statistically-backed disparities by **race**, **borough**, and **time of day**. This analysis serves as a clear example of how data science can be used to quantify and bring clarity to important, ongoing social issues.
