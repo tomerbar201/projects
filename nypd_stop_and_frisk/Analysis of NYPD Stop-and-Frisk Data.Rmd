@@ -374,8 +374,7 @@ word_counts <- police_stops %>%
   filter(!is.na(SUSPECT_OTHER_DESCRIPTION)) %>%
   unnest_tokens(word, SUSPECT_OTHER_DESCRIPTION) %>%
   anti_join(get_stopwords(), by = "word") %>%
-  filter(!word %in% c("null", "black", "white", "blue", "red", "green", 
-                      "yellow", "orange", "purple", "gray", "grey", "brown", "wearing")) %>%
+  filter(!word %in% c("null", "wearing")) %>%
   count(word, sort = TRUE)
 
 top_10_words <- head(word_counts, 10)
