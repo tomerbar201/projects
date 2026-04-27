@@ -8110,7 +8110,7 @@ def remove_Occ(s,ch):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Test your split_tests function on a few examples</span>
@@ -8313,7 +8313,7 @@ Eval test (3rd): ["assert count_common(['Facebook', 'Apple', 'Amazon', 'Netflix'
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="sd">'''# Quick test of your functions (run this to verify they work)</span>
@@ -8346,7 +8346,7 @@ Eval test (3rd): ["assert count_common(['Facebook', 'Apple', 'Amazon', 'Netflix'
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>'# Quick test of your functions (run this to verify they work)\nprint("Testing your implementation on one problem...")\ntest_example = mbpp[\'test\'][0]\n\n# Use your split_tests function\nexample_tests, eval_test, valid = split_tests(test_example)\n\nprint(f"Problem: {test_example[\'text\']}")\nprint(f"Example tests (shown to model): {example_tests}")\nprint(f"Evaluation test (held back): {eval_test}")\nprint()\n\n# Generate code using only the example tests\ngenerated = generate_code(test_example[\'text\'], example_tests)\nprint(f"Generated code:\n{generated}\n")\n\n# Test against the held-back evaluation test\ncompiled, passed = test_code(generated, eval_test)\nprint(f"Compiled: {compiled}, Tests passed: {passed}")\n'</pre>
 </div>
@@ -8358,7 +8358,7 @@ Eval test (3rd): ["assert count_common(['Facebook', 'Apple', 'Amazon', 'Netflix'
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="sd">'''</span>
@@ -8394,7 +8394,7 @@ Eval test (3rd): ["assert count_common(['Facebook', 'Apple', 'Amazon', 'Netflix'
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>'\nfor i in range (3,6):\n    print("\n")\n    print("=" * 50)\n    print(f"\nTesting problem {i}...")\n    test_example = mbpp[\'test\'][i]\n\n    # Use your split_tests function\n    example_tests, eval_test, valid = split_tests(test_example)\n\n    print(f"Problem: {test_example[\'text\']}")\n    print(f"Example tests (shown to model): {example_tests}")\n    print(f"Evaluation test (held back): {eval_test}")\n    print()\n\n    # Generate code using only the example tests\n    generated = generate_code(test_example[\'text\'], example_tests)\n    print(f"Generated code:\n{generated}\n")\n\n    # Test against the held-back evaluation test\n    compiled, passed = test_code(generated, eval_test)\n    print(f"Compiled: {compiled}, Tests passed: {passed}")\n    '</pre>
 </div>
@@ -8420,7 +8420,7 @@ Eval test (3rd): ["assert count_common(['Facebook', 'Apple', 'Amazon', 'Netflix'
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8478,127 +8478,6 @@ Eval test (3rd): ["assert count_common(['Facebook', 'Apple', 'Amazon', 'Netflix'
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pass Rate:        </span><span class="si">{</span><span class="n">pass_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Starting evaluation on 100 problems...
-  Problem 1/100: ✓ — Write a python function to remove first and last occurrence of a given character from the string....
-  Problem 2/100: ✓ — Write a function to sort a given matrix in ascending order according to the sum of its rows....
-  Problem 3/100: compiled — Write a function to count the most common words in a dictionary....
-  Problem 4/100: compiled — Write a python function to find the volume of a triangular prism....
-  Problem 5/100: compiled — Write a function to split a string at lowercase letters....
-  Problem 6/100: ✓ — Write a function to find sequences of lowercase letters joined with an underscore....
-  Problem 7/100: ✓ — Write a function to find the perimeter of a square....
-  Problem 8/100: ✓ — Write a function to remove characters from the first string which are present in the second string....
-  Problem 9/100: ✓ — Write a function to find whether a given array of integers contains any duplicate element....
-  Problem 10/100: ✓ — Write a function to check if the given number is woodball or not....
-  Problem 11/100: compiled — Write a function to find m number of multiples of n....
-  Problem 12/100: ✓ — Write a function to find the first duplicate element in a given array of integers....
-  Problem 13/100: ✓ — Write a python function to find the maximum sum of elements of list in a list of lists....
-  Problem 14/100: ✓ — Write a function to convert the given binary number to its decimal equivalent....
-  Problem 15/100: ✓ — Write a python function to find the product of non-repeated elements in a given array....
-  Problem 16/100: ✓ — Write a function to check if the given tuple list has all k elements....
-  Problem 17/100: ✓ — Write a python function to remove all digits from a list of strings....
-  Problem 18/100: ✓ — Write a python function to find binomial co-efficient....
-  Problem 19/100: ✓ — Write a python function to find the element occurring odd number of times....
-  Problem 20/100: ✓ — Write a python function to count all the substrings starting and ending with same characters....
-  Problem 21/100: compiled — Write a function to find the top k integers that occur most frequently from given lists of sorted and distinct integers using heap queue algorithm....
-  Problem 22/100: ✓ — Write a python function to find the largest prime factor of a given number....
-  Problem 23/100: compiled — Write a python function to convert a decimal number to binary number....
-  Problem 24/100: ✓ — Write a python function to find the missing number in a sorted array....
-  Problem 25/100: compiled — Write a function to find the n-th rectangular number....
-  Problem 26/100: compiled — Write a python function to find the nth digit in the proper fraction of two given numbers....
-  Problem 27/100: ✓ — Write a function to sort a given mixed list of integers and strings....
-  Problem 28/100: compiled — Write a function to find the division of first even and odd number of a given list....
-  Problem 29/100: compiled — Write a function to check if the letters of a given string can be rearranged so that two characters that are adjacent to each other are different....
-  Problem 30/100: ✓ — Write a function to find frequency of the elements in a given list of lists using collections module....
-  Problem 31/100: ✓ — Write a function to filter even numbers using lambda function....
-  Problem 32/100: compiled — Write a python function to find the sum of repeated elements in a given array....
-  Problem 33/100: ✓ — Write a function to find sequences of lowercase letters joined with an underscore using regex....
-  Problem 34/100: ✓ — Write a function that matches a word at the beginning of a string....
-  Problem 35/100: ✓ — Write a function to find the gcd of the given array elements....
-  Problem 36/100: ✓ — Write a python function to determine whether all the numbers are different from each other are not....
-  Problem 37/100: ✓ — Write a python function to find the last digit when factorial of a divides factorial of b....
-  Problem 38/100: compiled — Write a python function to set all odd bits of a given number....
-  Problem 39/100: ✓ — Write a function to extract every first or specified element from a given two-dimensional list....
-  Problem 40/100: compiled — Write a function to find the list with minimum length using lambda function....
-  Problem 41/100: ✓ — Write a function to print check if the triangle is equilateral or not....
-  Problem 42/100: ✓ — Write a function to caluclate area of a parallelogram....
-  Problem 43/100: ✓ — Write a python function to check whether the first and last characters of a given string are equal or not....
-  Problem 44/100: ✓ — Write a function to sort the given array by using counting sort....
-  Problem 45/100: compiled — Write a function to find t-nth term of geometric series....
-  Problem 46/100: compiled — Write a python function to check if a given number is one less than twice its reverse....
-  Problem 47/100: compiled — Write a python function to find the largest number that can be formed with the given digits....
-  Problem 48/100: ✓ — Write a python function to check whether the given two integers have opposite sign or not....
-  Problem 49/100: compiled — Write a function to find the nth octagonal number....
-  Problem 50/100: compiled — Write a function to find the maximum length of the subsequence with difference between adjacent elements for the given array....
-  Problem 51/100: ✓ — Write a python function to count number of substrings with the sum of digits equal to their length....
-  Problem 52/100: ✓ — Write a python function to find smallest number in a list....
-  Problem 53/100: ✓ — Write a function to find the maximum difference between available pairs in the given tuple list....
-  Problem 54/100: ✓ — Write a function to sort a list of tuples using lambda....
-  Problem 55/100: ✓ — Write a function of recursion list sum....
-  Problem 56/100: ✓ — Write a python function to count positive numbers in a list....
-  Problem 57/100: compiled — Write a function to find the number of ways to partition a set of bell numbers....
-  Problem 58/100: ✓ — Write a python function to check whether the given array is monotonic or not....
-  Problem 59/100: ✓ — Write a function to check whether a list contains the given sublist or not....
-  Problem 60/100: ✓ — Write a function to find whether all the given tuples have equal length or not....
-  Problem 61/100: compiled — Write a function to sort a list of elements using comb sort....
-  Problem 62/100: compiled — Write a python function to check whether the given number can be represented as difference of two squares or not....
-  Problem 63/100: compiled — Write a function to split the given string with multiple delimiters by using regex....
-  Problem 64/100: ✓ — Write a function to check whether it follows the sequence given in the patterns array....
-  Problem 65/100: ✓ — Write a function to find tuples which have all elements divisible by k from the given list of tuples....
-  Problem 66/100: ✓ — Write a python function to count the number of squares in a rectangle....
-  Problem 67/100: compiled — Write a python function to find the difference between sum of even and odd digits....
-  Problem 68/100: compiled — Write a python function to find number of integers with odd number of set bits....
-  Problem 69/100: ✓ — Write a python function to check whether the length of the word is odd or not....
-  Problem 70/100: ✓ — Write a function to find the nth tetrahedral number....
-  Problem 71/100: compiled — Write a function to zip the two given tuples....
-  Problem 72/100: ✓ — Write a function to find the volume of a sphere....
-  Problem 73/100: compiled — Write a python function to find the character made by adding all the characters of the given string....
-  Problem 74/100: ✓ — Write a function to find the n-th number in newman conway sequence....
-  Problem 75/100: ✓ — Write a function to find the surface area of a sphere....
-  Problem 76/100: compiled — Write a function to find nth centered hexagonal number....
-  Problem 77/100: compiled — Write a function to merge three dictionaries into a single expression....
-  Problem 78/100: ✓ — Write a function to get the frequency of the elements in a list....
-  Problem 79/100: ✓ — Write a function to find the closest smaller number than n....
-  Problem 80/100: ✓ — Write a python function to find the length of the longest word....
-  Problem 81/100: ✓ — Write a function to check if a substring is present in a given list of string values....
-  Problem 82/100: compiled — Write a function to check whether the given number is undulating or not....
-  Problem 83/100: ✓ — Write a function to calculate the value of 'a' to the power 'b'....
-  Problem 84/100: ✓ — Write a function to extract the index minimum value record from the given tuples....
-  Problem 85/100: ✓ — Write a python function to find the minimum length of sublist....
-  Problem 86/100: compiled — Write a python function to find the number of divisors of a given integer....
-  Problem 87/100: ✓ — Write a function to find frequency count of list of lists....
-  Problem 88/100: ✓ — Write a function to multiply all the numbers in a list and divide with the length of the list....
-  Problem 89/100: ✓ — Write a function to convert the given decimal number to its binary equivalent....
-  Problem 90/100: ✓ — Write a function to find the next smallest palindrome of a specified number....
-  Problem 91/100: compiled — Write a function to find the kth element in the given array....
-  Problem 92/100: ✓ — Write a function to convert snake case string to camel case string....
-  Problem 93/100: ✓ — Write a function to find eulerian number a(n, m)....
-  Problem 94/100: ✓ — Write a function to sort each sublist of strings in a given list of lists using lambda function....
-  Problem 95/100: ✓ — Write a python function to count true booleans in the given list....
-  Problem 96/100: compiled — Write a function to add the given list to the given tuples....
-  Problem 97/100: compiled — Write a python function to count hexadecimal numbers for a given range....
-  Problem 98/100: ✓ — Write a function to merge multiple sorted inputs into a single sorted iterator using heap queue algorithm....
-  Problem 99/100: ✓ — Write a python function to find the count of rotations of a binary string with odd value....
-  Problem 100/100: compiled — Write a function to extract the ranges that are missing from the given list with the given start range and end range values....
-
-==================================================
-EVALUATION RESULTS
-==================================================
-Total Problems: 100
-Compilation Rate: 100.00%
-Pass Rate:        66.00%
-==================================================
-</pre>
 </div>
 </div>
 </div>
@@ -8745,275 +8624,6 @@ def split_lowerstring(s):
     return re.findall('[a-z]+', s)
 ==================================================
 
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Q2:</strong>
-I modified the prompt to explicitly instruct the model to pay close attention to the example tests, infer hidden constraints, and prioritize the examples over the text description if there's a contradiction.</p>
-<p>When running the new prompt on the 3 failed cases:</p>
-<ul>
-<li><strong>Problem 2 (count_common):</strong> The model still failed. It generated the exact same code (<code>word_counts.most_common()</code>). The model struggled to infer the hidden constraint of returning exactly 4 items from the examples.</li>
-<li><strong>Problem 3 (find_Volume):</strong> The model still failed. It generated the exact same code (<code>length * width * height</code>). It failed to infer the correct mathematical formula for a triangular prism from the examples.</li>
-<li><strong>Problem 4 (split_lowerstring):</strong> The model still failed. It generated the exact same code (<code>re.findall('[a-z]+', s)</code>). It failed to prioritize the example tests (which split at uppercase letters) over the text description (which asked to split at lowercase letters).</li>
-</ul>
-<p>Finally, when rerunning the new prompt on the entire 100 questions, the pass rate slightly declined from <strong>66.00%</strong> to <strong>65.00%</strong>. This suggests that while the new prompt instructions were intended to help, they might have confused the model on other problems or were simply ignored by this specific 1.5B parameter model, which might lack the capacity to fully follow complex, multi-step instructions and infer subtle constraints compared to larger models.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Prompt variation experiment: compare old vs new outputs and rerun over all 100 examples</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_code_new</span><span class="p">(</span><span class="n">problem_text</span><span class="p">,</span> <span class="n">example_tests</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Generate Python code for a given problem using an improved prompt.</span>
-<span class="sd">    """</span>
-    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span> 
-            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">"You are an expert Python programmer. Write a Python function that solves the given problem. "</span>
-                <span class="s2">"CRITICAL INSTRUCTIONS:</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"1. Return ONLY the valid Python code enclosed in ```python ... ``` markdown blocks.</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"2. Always use the exact function name from the assert statements.</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"3. Write EFFICIENT code. If the problem requires recursion, you MUST use @lru_cache(maxsize=None) to avoid Time Limit Exceeded errors.</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"4. Handle edge cases properly.</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"5. PAY CLOSE ATTENTION TO THE EXAMPLE TESTS. If the text description contradicts the example tests, ALWAYS follow the behavior shown in the example tests.</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"6. Infer any hidden constraints from the example tests (e.g., returning exactly N items, specific mathematical formulas, etc.)."</span>
-            <span class="p">)</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">"Problem: Write a function to find the nth Fibonacci number.</span><span class="se">\n\n</span><span class="s2">"</span>
-                <span class="s2">"Example tests:</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"1. assert fib(2) == 1</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"2. assert fib(5) == 5</span><span class="se">\n\n</span><span class="s2">"</span>
-                <span class="s2">"Write the complete Python solution:"</span>
-            <span class="p">)</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"assistant"</span><span class="p">,</span>
-            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">"```python</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"from functools import lru_cache</span><span class="se">\n\n</span><span class="s2">"</span>
-                <span class="s2">"@lru_cache(maxsize=None)</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"def fib(n):</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"    if n &lt;= 0:</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"        return 0</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"    elif n == 1:</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"        return 1</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"    return fib(n-1) + fib(n-2)</span><span class="se">\n</span><span class="s2">"</span>
-                <span class="s2">"```"</span>
-            <span class="p">)</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> 
-            <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Problem: </span><span class="si">{</span><span class="n">problem_text</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Example tests:</span><span class="se">\n</span><span class="s2">1. </span><span class="si">{</span><span class="n">example_tests</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">2. </span><span class="si">{</span><span class="n">example_tests</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Write the complete Python solution:"</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-
-    <span class="n">prompt</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
-        <span class="n">messages</span><span class="p">,</span> 
-        <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
-        <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">model_inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">([</span><span class="n">prompt</span><span class="p">],</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">"pt"</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
-        <span class="o">**</span><span class="n">model_inputs</span><span class="p">,</span>
-        <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">max_new_tokens</span><span class="p">,</span>
-        <span class="n">do_sample</span><span class="o">=</span><span class="kc">False</span>
-    <span class="p">)</span>
-    
-    <span class="n">response_text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="n">model_inputs</span><span class="o">.</span><span class="n">input_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]):],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
-    <span class="c1"># Extract code using regex</span>
-    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">'```python\s*(.*?)\s*```'</span><span class="p">,</span> <span class="n">response_text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-        <span class="n">code</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">code</span> <span class="o">=</span> <span class="n">response_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"```python"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"```"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        
-    <span class="c1"># Defensive Post-Processing: Inject common imports</span>
-    <span class="n">common_imports</span> <span class="o">=</span> <span class="s2">"import math</span><span class="se">\n</span><span class="s2">import re</span><span class="se">\n</span><span class="s2">import collections</span><span class="se">\n</span><span class="s2">import itertools</span><span class="se">\n</span><span class="s2">from functools import lru_cache</span><span class="se">\n\n</span><span class="s2">"</span>
-    <span class="k">if</span> <span class="s2">"import math"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">code</span><span class="p">:</span>
-        <span class="n">code</span> <span class="o">=</span> <span class="n">common_imports</span> <span class="o">+</span> <span class="n">code</span>
-        
-    <span class="k">return</span> <span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Testing new prompt on the 3 failed cases:</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">case</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">failed_cases</span><span class="p">[:</span><span class="mi">3</span><span class="p">]):</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">case</span><span class="p">[</span><span class="s1">'index'</span><span class="p">]</span>
-    <span class="n">test_example</span> <span class="o">=</span> <span class="n">mbpp</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
-    <span class="n">example_tests</span><span class="p">,</span> <span class="n">eval_test</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">split_tests</span><span class="p">(</span><span class="n">test_example</span><span class="p">)</span>
-    
-    <span class="n">new_generated</span> <span class="o">=</span> <span class="n">generate_code_new</span><span class="p">(</span><span class="n">test_example</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="n">example_tests</span><span class="p">)</span>
-    <span class="n">compiled</span><span class="p">,</span> <span class="n">passed</span> <span class="o">=</span> <span class="n">test_code</span><span class="p">(</span><span class="n">new_generated</span><span class="p">,</span> <span class="n">eval_test</span><span class="p">)</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed Case </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> (Problem Index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Problem: </span><span class="si">{</span><span class="n">test_example</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Old Code:</span><span class="se">\n</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">'generated_code'</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"New Code:</span><span class="se">\n</span><span class="si">{</span><span class="n">new_generated</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Did it succeed this time? </span><span class="si">{</span><span class="s1">'Yes'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">passed</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'No'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Rerunning over all 100 examples with the new prompt...</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">new_passes</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">new_compilations</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_problems</span><span class="p">):</span>
-    <span class="n">test_example</span> <span class="o">=</span> <span class="n">mbpp</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-    <span class="n">example_tests</span><span class="p">,</span> <span class="n">eval_test</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">split_tests</span><span class="p">(</span><span class="n">test_example</span><span class="p">)</span>
-    
-    <span class="n">new_generated</span> <span class="o">=</span> <span class="n">generate_code_new</span><span class="p">(</span><span class="n">test_example</span><span class="p">[</span><span class="s1">'text'</span><span class="p">],</span> <span class="n">example_tests</span><span class="p">)</span>
-    <span class="n">compiled</span><span class="p">,</span> <span class="n">passed</span> <span class="o">=</span> <span class="n">test_code</span><span class="p">(</span><span class="n">new_generated</span><span class="p">,</span> <span class="n">eval_test</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">compiled</span><span class="p">:</span>
-        <span class="n">new_compilations</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">passed</span><span class="p">:</span>
-        <span class="n">new_passes</span> <span class="o">+=</span> <span class="mi">1</span>
-        
-    <span class="n">status</span> <span class="o">=</span> <span class="s2">"✓"</span> <span class="k">if</span> <span class="n">passed</span> <span class="k">else</span> <span class="p">(</span><span class="s2">"compiled"</span> <span class="k">if</span> <span class="n">compiled</span> <span class="k">else</span> <span class="s2">"✗"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Problem </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_problems</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">test_example</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
-
-<span class="n">new_compilation_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_compilations</span> <span class="o">/</span> <span class="n">n_problems</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-<span class="n">new_pass_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_passes</span> <span class="o">/</span> <span class="n">n_problems</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"NEW EVALUATION RESULTS"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total Problems: </span><span class="si">{</span><span class="n">n_problems</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Old Pass Rate:    </span><span class="si">{</span><span class="n">pass_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"New Pass Rate:    </span><span class="si">{</span><span class="n">new_pass_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Testing new prompt on the 3 failed cases:
-
-==================================================
-Failed Case 1 (Problem Index 2)
-Problem: Write a function to count the most common words in a dictionary.
-Old Code:
-import math
-import re
-import collections
-import itertools
-from functools import lru_cache
-
-from collections import Counter
-
-def count_common(words):
-    word_counts = Counter(words)
-    most_common_words = word_counts.most_common()
-    return most_common_words
-
-New Code:
-import math
-import re
-import collections
-import itertools
-from functools import lru_cache
-
-from collections import Counter
-
-def count_common(words):
-    word_counts = Counter(words)
-    most_common_words = word_counts.most_common()
-    return most_common_words
-
-Did it succeed this time? No
-==================================================
-
-==================================================
-Failed Case 2 (Problem Index 3)
-Problem: Write a python function to find the volume of a triangular prism.
-Old Code:
-import math
-import re
-import collections
-import itertools
-from functools import lru_cache
-
-def find_Volume(length, width, height):
-    return length * width * height
-
-New Code:
-import math
-import re
-import collections
-import itertools
-from functools import lru_cache
-
-def find_Volume(length, width, height):
-    return length * width * height
-
-Did it succeed this time? No
-==================================================
-
-==================================================
-Failed Case 3 (Problem Index 4)
-Problem: Write a function to split a string at lowercase letters.
-Old Code:
-import math
-import re
-import collections
-import itertools
-from functools import lru_cache
-
-import re
-
-def split_lowerstring(s):
-    return re.findall('[a-z]+', s)
-
-New Code:
-import math
-import re
-import collections
-import itertools
-from functools import lru_cache
-
-import re
-
-def split_lowerstring(s):
-    return re.findall('[a-z]+', s)
-
-Did it succeed this time? No
-==================================================
-
-==================================================
-NEW EVALUATION RESULTS
-==================================================
-Total Problems: 100
-Old Pass Rate:    66.00%
-New Pass Rate:    65.00%
-==================================================
 </pre>
 </div>
 </div>
